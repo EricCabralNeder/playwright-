@@ -1,2 +1,1 @@
 npm i @faker-js/faker
-npm i @faker-js/faker
