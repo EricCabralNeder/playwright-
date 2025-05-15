@@ -6,7 +6,7 @@ export class Toast {
         this.page = page
     }
 
-    async toastHaveText(message) {
+    async containText(message) {
         const toast = this.page.locator('.toast')
         await expect(toast).toHaveText(message)
         await expect(toast).not.toBeVisible({ timeout: 5000 })
