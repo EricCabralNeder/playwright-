@@ -1,0 +1,106 @@
+Documentação da Automação de Testes: Leads
+
+Descrição:
+Este conjunto de testes automatizados verifica o comportamento do sistema ao cadastrar leads na fila de espera. Ele cobre cenários positivos e negativos, garantindo que o sistema lide corretamente com entradas válidas e inválidas.
+
+Cenários de Teste:
+
+1. Cadastrar um Lead na Fila de Espera
+   Descrição: Verifica se um lead válido pode ser cadastrado com sucesso.
+   Passos:
+     1. Visitar a página inicial.
+     2. Abrir o modal de cadastro de leads.
+     3. Preencher o formulário com nome e e-mail válidos.
+     4. Submeter o formulário.
+   Resultado Esperado: Exibir a mensagem de sucesso:
+     "Agradecemos por compartilhar seus dados conosco. Em breve, nossa equipe entrará em contato!"
+
+2. Não Cadastrar Quando o E-mail Já Existe
+   Descrição: Verifica se o sistema impede o cadastro de um e-mail já registrado.
+   Passos:
+     1. Criar um lead via API com nome e e-mail válidos.
+     2. Visitar a página inicial.
+     3. Abrir o modal de cadastro de leads.
+     4. Preencher o formulário com o mesmo nome e e-mail.
+     5. Submeter o formulário.
+   Resultado Esperado: Exibir a mensagem de erro:
+     "O endereço de e-mail fornecido já está registrado em nossa fila de espera."
+
+3. Não Cadastrar um E-mail Incorreto
+   Descrição: Verifica se o sistema impede o cadastro de um e-mail inválido.
+   Passos:
+     1. Visitar a página inicial.
+     2. Abrir o modal de cadastro de leads.
+     3. Preencher o formulário com um nome válido e um e-mail inválido.
+     4. Submeter o formulário.
+   Resultado Esperado: Exibir a mensagem de erro:
+     "Email incorreto"
+
+4. Não Cadastrar Quando o Nome Não É Preenchido
+   Descrição: Verifica se o sistema impede o cadastro quando o campo de nome está vazio.
+   Passos:
+     1. Visitar a página inicial.
+     2. Abrir o modal de cadastro de leads.
+     3. Preencher o formulário com um e-mail válido, mas sem preencher o nome.
+     4. Submeter o formulário.
+   Resultado Esperado: Exibir a mensagem de erro:
+     "Campo obrigatório"
+
+5. Não Cadastrar Quando o E-mail Não É Preenchido
+   Descrição: Verifica se o sistema impede o cadastro quando o campo de e-mail está vazio.
+   Passos:
+     1. Visitar a página inicial.
+     2. Abrir o modal de cadastro de leads.
+     3. Preencher o formulário com um nome válido, mas sem preencher o e-mail.
+     4. Submeter o formulário.
+   Resultado Esperado: Exibir a mensagem de erro:
+     "Campo obrigatório"
+
+6. Não Cadastrar Quando Nenhum Campo É Preenchido
+   Descrição: Verifica se o sistema impede o cadastro quando nenhum campo é preenchido.
+   Passos:
+     1. Visitar a página inicial.
+     2. Abrir o modal de cadastro de leads.
+     3. Submeter o formulário sem preencher nenhum campo.
+   Resultado Esperado: Exibir as mensagens de erro:
+     "Campo obrigatório"
+     "Campo obrigatório"
+
+Estrutura do Código:
+
+Dependências:
+- @playwright/test: Framework de testes usado para automação.
+- @faker-js/faker: Biblioteca para gerar dados fictícios.
+
+Arquivos:
+1. leads.spec.js: Contém os testes automatizados para o cadastro de leads.
+2. LandingPage: Classe responsável por encapsular as interações com a página inicial.
+
+Como Executar os Testes:
+
+1. Certifique-se de que as dependências estão instaladas:
+   npm install
+
+2. Execute os testes:
+   npx playwright test
+
+3. Para depurar os testes:
+   npx playwright test --debug
+
+4. Para visualizar o relatório:
+   npx playwright show-report
+
+Exemplo de Código:
+
+Teste: Cadastrar um Lead na Fila de Espera
+test('deve cadastrar um lead na fila de espera', async ({ page }) => {
+  const leadName = faker.person.fullName();
+  const leadEmail = faker.internet.email();
+
+  await page.landing.visit();
+  await page.landing.openLeadModal();
+  await page.landing.submitLeadForm(leadName, leadEmail);
+
+  const message = 'Agradecemos por compartilhar seus dados conosco. Em breve, nossa equipe entrará em contato!';
+  await page.toast.containText(message);
+});
