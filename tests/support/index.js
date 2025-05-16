@@ -16,7 +16,7 @@ const test = base.extend({
             login: new LoginPage(page),
             movies: new MoviesPage(page),
             toast: new Toast(page),
-            faker: faker, 
+            faker: faker
         })
     }
 })
