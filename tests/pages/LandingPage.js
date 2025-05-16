@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+const {test, expect} = require('@playwright/test')
 
 export class LandingPage {
 
