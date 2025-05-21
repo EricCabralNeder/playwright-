@@ -1,6 +1,6 @@
 const {test, expect} = require('@playwright/test')
 
-export class LoginPage {
+export class Login {
 
     constructor(page) {
         this.page = page
@@ -24,5 +24,12 @@ export class LoginPage {
     async alertHaveText(message){
         const alert =  this.page.locator('span[class$=alert]') // seletor css
         await expect(alert).toHaveText(message)
+    }
+    
+    async isLoggedIn() {
+        // const loggedLink = this.page.locator('a[href="/logout"]')
+        // await expect(loggedLink).toBeVisible()
+        await this.page.waitForLoadState('networkidle')
+        await expect(this.page).toHaveURL(/.*movies/)
     }
 }

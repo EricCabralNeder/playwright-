@@ -1,23 +1,17 @@
-const {test, expect} = require('@playwright/test')
+const { test, expect } = require('@playwright/test')
 
-export class MoviesPage {
+export class Movies {
 
     constructor(page) {
         this.page = page
     }
-    async clickCasdastro(){
+
+    async goForm() {
         await this.page.locator('a[href$="register"]').click()
     }
 
-    async isLoggedIn(){
-        // const loggedLink = this.page.locator('a[href="/logout"]')
-        // await expect(loggedLink).toBeVisible()
-        await this.page.waitForLoadState('networkidle')
-        await expect(this.page).toHaveURL(/.*movies/)
-    }
-
     async create(title, overview, company, release_year) {
-        await this.clickCasdastro()
+        await this.goForm()
         await this.page.getByLabel('Titulo do filme').fill(title)
 
         await this.page.getByLabel('Sinopse').fill(overview)
@@ -35,12 +29,23 @@ export class MoviesPage {
 
 
     async IdentityMovies(título, sinopse, distribuidora, lançamento) {
-        await this.clickCasdastro()
+        await this.goForm()
         await this.page.getByRole('button', { name: 'Cadastrar' }).click()
 
-        await this.page.getByPlaceholder(título).isVisible()
-        await this.page.getByPlaceholder(sinopse).isVisible()
-        await this.page.getByPlaceholder(distribuidora).isVisible()
-        await this.page.getByPlaceholder(lançamento).isVisible()
+        await this.alertHaveText([
+            título,
+            sinopse,
+            distribuidora,
+            lançamento
+        ])
+
+        // await this.page.getByPlaceholder(título).isVisible()
+        // await this.page.getByPlaceholder(sinopse).isVisible()
+        // await this.page.getByPlaceholder(distribuidora).isVisible()
+        // await this.page.getByPlaceholder(lançamento).isVisible()
+    }
+
+    async alertHaveText(target){
+        await expect(this.page.locator('.alert')).toHaveText(target)
     }
 }
