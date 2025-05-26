@@ -6,17 +6,30 @@ export class Login {
         this.page = page
     }
 
-    async do(email, password) {
+    async do(email, password, username) {
         this.visit()
         this.submit(email, password)
-        this.isLoggedIn()
+        this.isLoggedIn(username)
     }
 
     async visit() {
-        await this.page.goto('http://localhost:3000/admin/login')
-        const loginForm = this.page.locator('.login-form')
-        await expect(loginForm).toBeVisible()
+        await this.page.context().clearCookies();
+        await this.page.addInitScript(() => {
+            localStorage.clear();
+            sessionStorage.clear();
+        });
+        await this.page.goto('http://localhost:3000/admin/login');
+        const currentUrl = this.page.url();
 
+        if (currentUrl.includes('/admin/login')) {
+            // Estamos na tela de login mesmo
+            await expect(this.page).toHaveURL('http://localhost:3000/admin/login');
+            await expect(this.page.locator('.login-form')).toBeVisible();
+        } else {
+            // Já redirecionou, possivelmente já logado
+            console.warn('Usuário já autenticado, redirecionado para /admin/movies');
+            await expect(this.page).toHaveURL('http://localhost:3000/admin/movies');
+        }
     }
 
     async submit(email, password) {
@@ -32,7 +45,7 @@ export class Login {
         await expect(alert).toHaveText(message)
     }
 
-    async isLoggedIn() {
+    async isLoggedIn(username) {
         // const loggedLink = this.page.locator('a[href="/logout"]')
         // await expect(loggedLink).toBeVisible()
         // await this.page.waitForLoadState('networkidle')
@@ -45,8 +58,7 @@ export class Login {
         // Espera até que o elemento esteja visível (timeout padrão: 30s, você pode ajustar)
         await loggedUser.waitFor({ state: 'visible', timeout: 10000 }); // espera até 10s
 
-
-        await expect(loggedUser).toHaveText('Olá, Admin')
+        await expect(loggedUser).toHaveText(`Olá, ${username}`)
         // await expect(this.page).locator('.logged-user').toHaveText('Olá, Admin')
     }
 }

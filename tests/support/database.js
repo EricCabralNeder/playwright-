@@ -1,4 +1,3 @@
-const { Pool } = require('pg');
 import pgPromise from 'pg-promise';
 
 const pgp = pgPromise({});
