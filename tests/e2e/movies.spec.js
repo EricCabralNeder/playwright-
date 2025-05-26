@@ -1,5 +1,5 @@
 const { test, expect } = require('../support')
-const data = require('../support/fixtures/movies.json')
+const data = require('../support/fixtures/covers/movies.json')
 const { executeSQL } = require('../support/database')
 
 test.beforeEach(async ({ page }) => {
@@ -18,7 +18,7 @@ test('deve poder cadastrar um novo filme', async ({ page }) => {
 
     await page.login.do('admin@zombieplus.com', 'pwd123', 'Admin')
   
-    await page.movies.create(movie.title, movie.overview, movie.company, movie.release_year)
+    await page.movies.create(movie.title, movie.overview, movie.company, movie.release_year, movie.cover)
     await page.toast.containText('UhullCadastro realizado com sucesso!')
 })
 
